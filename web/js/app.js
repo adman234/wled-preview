@@ -2,9 +2,10 @@ import { parseCfg, parsePresets, inferTotal } from './parse.js';
 import { PresetRenderer, effectName, isApproximated } from './engine.js';
 import { paletteName } from './palettes.js';
 import { matrixXY } from './layout.js';
+import { presetToText, parseImport, nextId, exportText } from './presetio.js';
 
 const $ = (id) => document.getElementById(id);
-const state = { cfg: null, presets: [], total: 0, sel: null, renderer: null, paused: false, size: 10, playlist: null };
+const state = { imported: new Set(), cfg: null, presets: [], total: 0, sel: null, renderer: null, paused: false, size: 10, playlist: null };
 const thumbs = new Map(); // preset id -> {renderer, canvas}
 const visible = new Set();
 
@@ -37,7 +38,7 @@ function setCfg(json, name) {
   rebuild();
 }
 function setPresets(json, name) {
-  state.rawPresets = json; state.presetsName = name;
+  state.rawPresets = json; state.presetsName = name; state.imported.clear();
   $('drop-presets').classList.add('ok');
   $('presets-status').textContent = name;
   rebuild();
@@ -52,6 +53,7 @@ function rebuild() {
   $('presets-status').textContent = `${state.presetsName} – ${state.presets.length} presets`;
   thumbs.clear(); visible.clear();
   buildList();
+  $('export').disabled = false;
   $('search').hidden = false;
   select(state.sel && state.presets.find((p) => p.id === state.sel) ? state.sel : state.presets[0].id);
 }
@@ -71,7 +73,13 @@ function buildList() {
     li.innerHTML = `<div class="n"><span class="id"></span><span class="name"></span><span class="tag"></span></div>`;
     li.querySelector('.id').textContent = p.id;
     li.querySelector('.name').textContent = p.name;
-    li.querySelector('.tag').textContent = tag;
+    const tagEl = li.querySelector('.tag');
+    tagEl.textContent = state.imported.has(p.id) ? `imported · ${tag}` : tag;
+    tagEl.classList.toggle('imp', state.imported.has(p.id));
+    const cp = document.createElement('button');
+    cp.type = 'button'; cp.className = 'copy'; cp.textContent = 'Copy'; cp.title = 'Copy this preset as JSON';
+    cp.addEventListener('click', (e) => { e.stopPropagation(); copyPreset(p.id, cp); });
+    li.querySelector('.n').appendChild(cp);
     if (!p.playlist) { const c = document.createElement('canvas'); c.width = 240; c.height = 8; li.appendChild(c); }
     li.addEventListener('click', () => select(p.id));
     ul.appendChild(li);
@@ -87,6 +95,53 @@ function filterList() {
   }
 }
 $('search').addEventListener('input', filterList);
+
+// ---------- copy / import / export ----------
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch { /* insecure context (plain http) – fall back */ }
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch { /* ignore */ }
+  ta.remove();
+  return ok;
+}
+async function copyPreset(id, btn) {
+  const ok = await copyText(presetToText(state.rawPresets[id]));
+  btn.textContent = ok ? 'Copied!' : 'Failed';
+  setTimeout(() => { btn.textContent = 'Copy'; }, 1200);
+}
+function doImport() {
+  const err = $('import-error');
+  try {
+    const items = parseImport($('import-text').value);
+    if (!state.rawPresets) state.rawPresets = {};
+    let last;
+    for (const obj of items) {
+      last = nextId(Object.keys(state.rawPresets));
+      state.rawPresets[last] = structuredClone(obj);
+      state.imported.add(last);
+    }
+    state.presetsName = state.presetsName || 'presets.json';
+    $('drop-presets').classList.add('ok');
+    $('import-dlg').close();
+    $('import-text').value = '';
+    state.sel = last;
+    rebuild();
+    $('list').querySelector(`li[data-id="${CSS.escape(last)}"]`)?.scrollIntoView({ block: 'nearest' });
+  } catch (e) { err.hidden = false; err.textContent = e.message; }
+}
+function doExport() {
+  const blob = new Blob([exportText(state.rawPresets)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'presets.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+$('import').addEventListener('click', () => { $('import-error').hidden = true; $('import-dlg').showModal(); $('import-text').focus(); });
+$('import-go').addEventListener('click', doImport);
+$('export').addEventListener('click', doExport);
 
 // ---------- selection & playback ----------
 function select(id) {

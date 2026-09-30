@@ -38,3 +38,14 @@ footer{padding:.5rem 1rem;border-top:1px solid var(--line);color:var(--dim);font
 footer a{color:var(--acc)}
 code{background:#232733;padding:1px 4px;border-radius:3px}
 @media(max-width:800px){main{grid-template-columns:1fr}aside{position:static;max-height:50vh;border-right:0;border-bottom:1px solid var(--line)}}
+
+#list .copy{margin-left:.4rem;padding:0 .4rem;font-size:11px;line-height:1.6;background:transparent;color:var(--dim)}
+#list .copy:hover{color:var(--fg)}
+#list .tag.imp{color:var(--acc)}
+button:disabled{opacity:.45;cursor:default;border-color:var(--line)}
+dialog{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:10px;width:min(560px,92vw);padding:1rem 1.2rem}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog h2{margin:.2rem 0 .4rem;font-size:1.1rem}
+dialog textarea{width:100%;background:#11131a;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:.5rem;font:12px ui-monospace,monospace;resize:vertical}
+dialog .row{display:flex;gap:.5rem;margin-top:.7rem}
+dialog .error{margin-top:.5rem}

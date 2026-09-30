@@ -7,7 +7,8 @@ Upload your `presets.json` (and optionally `cfg.json`) and see each preset anima
 - Shows each LED output from `cfg.json` (or a matrix, if one is configured); `cfg.json` is optional.
 - Honours segment start/stop, reverse, mirror, grouping/spacing, offset, per-segment and master brightness, palettes and colours.
 - Animated thumbnail of every preset in the list, segment table per preset, playlists are stepped through.
-- ~60 WLED effects implemented (Fire 2012, Rainbow, Colorwaves, Twinkle, Scanner, Meteor, Plasma…).
+- **Copy** any preset as JSON, **Import** (paste) a preset to add it to the list, and **Export** a `presets.json` that includes your imports, ready to restore to the device.
+- ~70 WLED effects implemented (Fire 2012, Rainbow, Colorwaves, Twinkle, Scanner, Meteor, Plasma…).
 
 > **Approximate preview.** Effects are independent JavaScript re-implementations, *not* the WLED firmware, so timing and
 > detail differ slightly. Effects that aren't implemented yet are flagged **approximated** and shown as a generic palette

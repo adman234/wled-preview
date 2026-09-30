@@ -13,6 +13,8 @@
   <h1>WLED Preview</h1>
   <span class="sub" id="devname"></span>
   <span class="spacer"></span>
+  <button id="import" type="button">Import</button>
+  <button id="export" type="button" disabled>Export</button>
   <button id="sample" type="button">Load sample</button>
 </header>
 
@@ -55,6 +57,15 @@
     </div>
   </section>
 </main>
+<dialog id="import-dlg">
+  <form method="dialog">
+    <h2>Import preset</h2>
+    <p class="hint">Paste a preset copied from here or from WLED (a preset object, or <code>"5":{…}</code>). It is added to the list with a new id.</p>
+    <textarea id="import-text" rows="12" spellcheck="false" placeholder='{"n":"My preset","seg":[{"start":0,"stop":30,"fx":9,"pal":11}]}'></textarea>
+    <div id="import-error" class="error" hidden></div>
+    <div class="row"><span class="spacer"></span><button value="cancel" type="submit">Cancel</button><button id="import-go" type="button">Add to list</button></div>
+  </form>
+</dialog>
 <footer>Approximate preview – effects are re-implemented, not the real WLED firmware. <a href="https://github.com/adman234/wled-preview" target="_blank" rel="noopener">GitHub</a></footer>
 <script type="module" src="js/app.js"></script>
 </body>
