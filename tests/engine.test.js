@@ -77,3 +77,37 @@ test('sample presets all render without throwing', () => {
     for (let t = 0; t < 2000; t += 100) r.frame(t);
   }
 });
+
+test('Chase 3 shows the three segment colours in bands', () => {
+  const out = render(seg({ fx: 54, ix: 0, col: [[255, 0, 0], [0, 255, 0], [0, 0, 255]] }), 0);
+  const seen = new Set();
+  for (let i = 0; i < 30; i++) seen.add([out[i * 3], out[i * 3 + 1], out[i * 3 + 2]].map(Math.round).join());
+  assert.equal(seen.size, 3);
+});
+
+test('Spots Fade pulses over time and Spots does not', () => {
+  const a = Array.from(render(seg({ fx: 86, sx: 200, ix: 200 }), 0)), b = Array.from(render(seg({ fx: 86, sx: 200, ix: 200 }), 1500));
+  assert.notDeepEqual(a, b);
+  const c = Array.from(render(seg({ fx: 85, sx: 200, ix: 200 }), 0)), d = Array.from(render(seg({ fx: 85, sx: 200, ix: 200 }), 1500));
+  assert.deepEqual(c, d);
+});
+
+test('Twinklefox/Twinklecat twinkle over a background', () => {
+  for (const fx of [80, 81]) {
+    const r = new PresetRenderer({ segs: [seg({ fx, pal: 11, col: [[255, 255, 255], [0, 0, 0], [0, 0, 0]] })], bri: 255, on: true }, 30);
+    let lit = 0, dark = 0;
+    for (let t = 0; t < 6000; t += 100) for (let i = 0; i < 30; i++) { const v = r.frame(t)[i * 3]; v > 100 ? lit++ : v < 10 && dark++; }
+    assert.ok(lit > 0 && dark > 0, `fx ${fx}`);
+  }
+});
+
+test('Noisefire is red/orange and Fill Noise varies with a palette', () => {
+  const out = render(seg({ fx: 143 }), 2000);
+  for (let i = 0; i < 30; i++) assert.ok(out[i * 3] >= out[i * 3 + 1] && out[i * 3 + 1] >= out[i * 3 + 2]);
+  const fn = render(seg({ fx: 69, pal: 11 }), 2000);
+  assert.ok(new Set(Array.from({ length: 30 }, (_, i) => Math.round(fn[i * 3]))).size > 5);
+});
+
+test('newly added effects are no longer flagged approximated', () => {
+  for (const fx of [37, 54, 69, 80, 81, 86, 110, 143]) assert.ok(!isApproximated(seg({ fx })), `fx ${fx}`);
+});

@@ -398,3 +398,115 @@ def(97, 'Plasma', (p) => {
     p.set(i, p.pal(v * 255));
   }
 }, 'rainbow');
+
+// ---- noise helpers (value noise, roughly like FastLED's inoise8) -------------
+const hash2 = (x, y) => {
+  let h = Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+const smooth = (t) => t * t * (3 - 2 * t);
+function noise2(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = smooth(x - xi), yf = smooth(y - yi);
+  const a = hash2(xi, yi), b = hash2(xi + 1, yi), c = hash2(xi, yi + 1), d = hash2(xi + 1, yi + 1);
+  return (a + (b - a) * xf) * (1 - yf) + (c + (d - c) * xf) * yf;
+}
+const inoise8 = (x, y) => 128 + (noise2(x, y) - 0.5) * 190; // ~16..240, centred on 128
+
+// ---- chases ----------------------------------------------------------------
+def(37, 'Chase 2', (p) => {
+  // dot of colour 1 (or palette) chasing over colour 2, with an optional colour 3 tail
+  const size = 1 + ((p.ix * p.len) >> 9);
+  const pos = (((p.t * ((p.sx >> 2) + 1)) / 256) * p.len / 64) % p.len;
+  const tail = p.col[2][0] || p.col[2][1] || p.col[2][2] ? p.col[2] : null;
+  p.fill(p.col[1]);
+  for (let k = 0; k < size; k++) {
+    const i = Math.floor(pos + k) % p.len;
+    p.set(i, k === size - 1 || !tail ? p.pal(i * 255 / p.len) : tail);
+  }
+});
+def(54, 'Chase 3', (p) => {
+  // bands of colour 1, 2 and 3 scrolling along the strip
+  const w = 1 + Math.round(p.ix / 43);
+  const pos = p.t * (0.004 + (p.sx / 255) * 0.03);
+  for (let i = 0; i < p.len; i++) p.set(i, p.col[Math.floor((i + pos) / w) % 3]);
+});
+
+// ---- noise -----------------------------------------------------------------
+def(69, 'Fill Noise', (p) => {
+  // WLED samples noise at i*len, so neighbouring pixels are effectively unrelated but evolve slowly
+  const step = p.t / 1000 * (0.25 + p.sx / 60);
+  for (let i = 0; i < p.len; i++) p.set(i, p.pal(inoise8(i * 7.31 + 0.5, step + i * 3.17)));
+});
+const NOISEFIRE = [[0, 2, 0, 0], [17, 4, 0, 0], [34, 8, 0, 0], [51, 8, 0, 0], [68, 16, 0, 0], [85, 255, 0, 0], [102, 255, 0, 0], [119, 255, 0, 0],
+  [136, 139, 69, 0], [153, 139, 69, 0], [170, 255, 165, 0], [187, 255, 165, 0], [204, 255, 255, 0], [221, 255, 165, 0], [238, 255, 255, 0], [255, 255, 255, 0]];
+def(143, 'Noisefire', (p) => {
+  // audio-reactive in WLED; here it runs as if the sound input were silent
+  const t = p.t / 1000 * p.sx * 0.05;
+  for (let i = 0; i < p.len; i++) {
+    const n = inoise8(i * p.sx / 64 / 3, t * 6);
+    const idx = Math.min(255, ((255 - (i * 256) / p.len) * n) / (256 - Math.min(p.ix, 250)));
+    const c = sampleNoisefire(idx);
+    const bri = (128 + 127 * Math.sin((idx / 256) * TAU)) / 255;
+    p.set(i, scale(c, bri));
+  }
+});
+function sampleNoisefire(idx) {
+  const s = NOISEFIRE;
+  for (let k = 0; k < s.length - 1; k++) {
+    if (idx <= s[k + 1][0]) { const f = (idx - s[k][0]) / (s[k + 1][0] - s[k][0]); return [s[k][1] + (s[k + 1][1] - s[k][1]) * f, s[k][2] + (s[k + 1][2] - s[k][2]) * f, s[k][3] + (s[k + 1][3] - s[k][3]) * f]; }
+  }
+  return [s[15][1], s[15][2], s[15][3]];
+}
+
+// ---- twinklefox / twinklecat ---------------------------------------------------
+function twinkleFox(p, cat) {
+  const base = 2500 * (1.6 - (p.sx / 255) * 1.2);
+  const density = 0.12 + (p.ix / 255) * 0.55;
+  for (let i = 0; i < p.len; i++) {
+    const period = base * (0.6 + hash2(i, 17) * 0.8);
+    const tt = p.t + hash2(i, 99) * period;
+    const n = Math.floor(tt / period), ph = (tt % period) / period;
+    let v = 0;
+    if (hash2(i, n + 1000) < density) {
+      v = cat ? Math.sin(ph * Math.PI) ** 1.5 : ph < 0.34 ? ph / 0.34 : Math.max(0, 1 - (ph - 0.34) / 0.66);
+    }
+    p.set(i, blend(p.col[1], p.pal(hash2(i, n + 2000) * 255), v));
+  }
+}
+def(80, 'Twinklefox', (p) => twinkleFox(p, false));
+def(81, 'Twinklecat', (p) => twinkleFox(p, true));
+
+// ---- spots / flow ---------------------------------------------------------------
+function spots(p, fade) {
+  const zones = Math.max(1, Math.floor((p.sx * (p.len >> 2)) / 256));
+  const zoneLen = Math.max(1, Math.floor(p.len / zones));
+  const offset = (p.len - zones * zoneLen) >> 1;
+  const width = Math.max(0.02, p.ix / 255);
+  const pulse = fade ? 0.15 + 0.85 * tri(p.t / (2500 + (255 - p.sx) * 10)) : 1;
+  p.fill(p.col[1]);
+  for (let z = 0; z < zones; z++) {
+    for (let i = 0; i < zoneLen; i++) {
+      const d = Math.abs((i + 0.5) / zoneLen - 0.5) * 2; // 0 centre .. 1 edge
+      if (d >= width) continue;
+      p.set(offset + z * zoneLen + i, blend(p.col[1], p.pal(((z * 255) / zones)), (1 - d / width) * pulse));
+    }
+  }
+}
+def(85, 'Spots', (p) => spots(p, false));
+def(86, 'Spots Fade', (p) => spots(p, true));
+
+def(110, 'Flow', (p) => {
+  const zones = Math.max(1, Math.floor((p.ix * (p.len / 6)) / 255));
+  const zoneLen = Math.max(1, Math.floor(p.len / zones));
+  const offset = (p.len - zones * zoneLen) >> 1;
+  const counter = (p.t / 1000) * (2 + p.sx / 4);
+  p.fill(BLACK);
+  for (let z = 0; z < zones; z++) {
+    const idx = (z * 255) / zones - counter;
+    for (let i = 0; i < zoneLen; i++) {
+      const lum = Math.sin(((i + 0.5) / zoneLen) * Math.PI) ** 0.8;
+      p.set(offset + z * zoneLen + i, scale(p.pal(idx + (i * 40) / zoneLen), lum));
+    }
+  }
+}, 'party');
