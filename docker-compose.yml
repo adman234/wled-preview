@@ -1,0 +1,7 @@
+services:
+  wled-preview:
+    image: ghcr.io/adman234/wled-preview:latest
+    container_name: wled-preview
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

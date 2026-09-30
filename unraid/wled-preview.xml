@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>wled-preview</Name>
+  <Repository>ghcr.io/adman234/wled-preview:latest</Repository>
+  <Registry>https://github.com/adman234/wled-preview/pkgs/container/wled-preview</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/adman234/wled-preview/issues</Support>
+  <Project>https://github.com/adman234/wled-preview</Project>
+  <Overview>Web UI for previewing WLED presets. Upload your WLED cfg.json and presets.json and see how each preset will look on your LED layout, animated in the browser. Files never leave your browser and the container needs no storage. Effects are approximate re-implementations, not the real WLED firmware. Not affiliated with the WLED project.</Overview>
+  <Category>Tools: HomeAutomation:</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/adman234/wled-preview/main/unraid/wled-preview.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/adman234/wled-preview/main/unraid/icon.svg</Icon>
+  <ExtraParams>--restart=unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI Port" Target="8080" Default="8080" Mode="tcp" Description="Port for the web interface" Type="Port" Display="always" Required="true" Mask="false">8080</Config>
+</Container>

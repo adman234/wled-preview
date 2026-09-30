@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WLED Preview</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <img src="icon.svg" alt="" width="28" height="28">
+  <h1>WLED Preview</h1>
+  <span class="sub" id="devname"></span>
+  <span class="spacer"></span>
+  <button id="sample" type="button">Load sample</button>
+</header>
+
+<main>
+  <aside>
+    <section class="files">
+      <label class="drop" id="drop-cfg">
+        <input type="file" id="file-cfg" accept=".json,application/json">
+        <strong>cfg.json</strong> <span id="cfg-status">optional – gives your LED outputs</span>
+      </label>
+      <label class="drop" id="drop-presets">
+        <input type="file" id="file-presets" accept=".json,application/json">
+        <strong>presets.json</strong> <span id="presets-status">drop or click to choose</span>
+      </label>
+      <p class="hint">Files are read in your browser and never uploaded. Drag both onto this panel at once if you like.</p>
+      <div id="error" class="error" hidden></div>
+    </section>
+    <input id="search" type="search" placeholder="Filter presets…" autocomplete="off" hidden>
+    <ul id="list"></ul>
+  </aside>
+
+  <section class="stage">
+    <div id="empty" class="empty">
+      <h2>Preview your WLED presets</h2>
+      <p>Upload your <code>presets.json</code> (and optionally <code>cfg.json</code>) from your WLED device
+      – <em>Config → Security &amp; Updates → Backup</em>, or browse to <code>http://&lt;wled-ip&gt;/presets.json</code> and <code>/cfg.json</code> –
+      or try the sample.</p>
+    </div>
+    <div id="view" hidden>
+      <div class="bar">
+        <h2 id="pname"></h2>
+        <span class="spacer"></span>
+        <label>LED size <input type="range" id="size" min="3" max="20" value="10"></label>
+        <button id="pause" type="button">Pause</button>
+      </div>
+      <div id="notice" class="notice" hidden></div>
+      <div id="strips"></div>
+      <h3>Segments</h3>
+      <table id="segs"><thead><tr><th>#</th><th>LEDs</th><th>Effect</th><th>Palette</th><th>Speed</th><th>Int.</th><th>Colours</th><th>Flags</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+</main>
+<footer>Approximate preview – effects are re-implemented, not the real WLED firmware. <a href="https://github.com/adman234/wled-preview" target="_blank" rel="noopener">GitHub</a></footer>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

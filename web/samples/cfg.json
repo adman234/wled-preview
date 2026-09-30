@@ -1,0 +1,1 @@
+{"id":{"name":"Sample WLED"},"hw":{"led":{"total":150,"ins":[{"start":0,"len":90,"pin":[2],"order":0,"rev":false,"skip":0,"type":22},{"start":90,"len":60,"pin":[4],"order":0,"rev":false,"skip":0,"type":22}]}}}

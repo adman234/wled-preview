@@ -1,0 +1,12 @@
+{"0":{},
+"1":{"n":"Warm Fire","bri":160,"on":true,"seg":[{"id":0,"start":0,"stop":150,"grp":1,"spc":0,"on":true,"bri":255,"col":[[255,160,0],[0,0,0],[0,0,0]],"fx":66,"sx":120,"ix":160,"pal":35}]},
+"2":{"n":"Rainbow Flow","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,0,0],[0,0,0]],"fx":9,"sx":140,"ix":128,"pal":0}]},
+"3":{"n":"Ocean Waves","bri":150,"on":true,"seg":[{"id":0,"start":0,"stop":90,"col":[[0,80,255],[0,0,0],[0,0,0]],"fx":67,"sx":100,"ix":128,"pal":9},{"id":1,"start":90,"stop":150,"col":[[0,80,255],[0,0,0],[0,0,0]],"fx":65,"sx":90,"ix":128,"pal":9,"rev":true}]},
+"4":{"n":"Police Scanner","bri":200,"on":true,"seg":[{"id":0,"start":0,"stop":75,"col":[[255,0,0],[0,0,0],[0,0,0]],"fx":40,"sx":200,"ix":128,"pal":0},{"id":1,"start":75,"stop":150,"col":[[0,0,255],[0,0,0],[0,0,0]],"fx":40,"sx":200,"ix":128,"pal":0,"rev":true}]},
+"5":{"n":"Twinkle Stars","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,230,160],[0,0,20],[0,0,0]],"fx":17,"sx":128,"ix":140,"pal":0}]},
+"6":{"n":"Theater Chase","bri":140,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,120],[0,0,0],[0,0,0]],"fx":13,"sx":180,"ix":128,"pal":0}]},
+"7":{"n":"Meteor Shower","bri":180,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[200,220,255],[0,0,0],[0,0,0]],"fx":76,"sx":160,"ix":128,"pal":0,"mi":true}]},
+"8":{"n":"Party Plasma","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,0,0],[0,0,0]],"fx":97,"sx":128,"ix":128,"pal":6}]},
+"9":{"n":"Unsupported Effect","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,255,0],[0,0,255]],"fx":79,"sx":128,"ix":128,"pal":11}]},
+"10":{"n":"Holiday Playlist","playlist":{"ps":[1,2,3],"dur":[100,100,100],"transition":[7],"repeat":0,"end":0}}
+}
