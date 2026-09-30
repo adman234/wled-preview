@@ -5,10 +5,10 @@ import { wheel, mulberry32 } from './color.js';
 
 // Names for effects we don't implement (shown in the UI; preview uses a fallback).
 export const EXTRA_NAMES = {
-  31: 'Chase Flash', 32: 'Chase Flash Rnd', 35: 'Traffic Light', 37: 'Chase 2', 38: 'Aurora', 39: 'Stream', 41: 'Lighthouse',
-  44: 'Tetrix', 48: 'Police', 49: 'Fairy', 51: 'Fairytwinkle', 53: 'Chase 3', 54: 'Chase 3', 59: 'Multi Comet', 61: 'Stream 2', 62: 'Oscillate',
-  68: 'Bpm', 69: 'Fill Noise', 70: 'Noise 1', 71: 'Noise 2', 72: 'Noise 3', 73: 'Noise 4', 75: 'Lake', 78: 'Railway', 79: 'Ripple',
-  80: 'Twinklefox', 81: 'Twinklecat', 82: 'Halloween Eyes', 83: 'Solid Pattern', 84: 'Solid Pattern Tri', 85: 'Spots', 86: 'Spots Fade',
+  31: 'Chase Flash', 32: 'Chase Flash Rnd', 35: 'Traffic Light', 38: 'Aurora', 39: 'Stream', 41: 'Lighthouse',
+  44: 'Tetrix', 48: 'Police', 49: 'Fairy', 51: 'Fairytwinkle', 59: 'Multi Comet', 61: 'Stream 2', 62: 'Oscillate',
+  68: 'Bpm', 70: 'Noise 1', 71: 'Noise 2', 72: 'Noise 3', 73: 'Noise 4', 75: 'Lake', 78: 'Railway', 79: 'Ripple',
+  82: 'Halloween Eyes', 83: 'Solid Pattern', 84: 'Solid Pattern Tri', 85: 'Spots', 86: 'Spots Fade',
   89: 'Starburst', 90: 'Exploding Fireworks', 93: 'Sinelon Dual', 94: 'Sinelon Rainbow', 96: 'Drip', 98: 'Percent', 99: 'Ripple Rainbow', 100: 'Heartbeat',
 };
 
@@ -26,6 +26,7 @@ function buildPalette(seg, pal0, rand, t) {
     case 0:
       if (pal0 === 'rainbow') stops = PALETTES[11][1];
       else if (pal0 === 'fire') stops = PALETTES[35][1];
+      else if (pal0 === 'party') stops = PALETTES[6][1];
       else return () => c[0];
       break;
     case 1: { const off = t / 40; return (i) => wheel(i + off); }

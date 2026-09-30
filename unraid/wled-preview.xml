@@ -13,7 +13,7 @@
   <Category>Tools: HomeAutomation:</Category>
   <WebUI>http://[IP]:[PORT:8080]/</WebUI>
   <TemplateURL>https://raw.githubusercontent.com/adman234/wled-preview/main/unraid/wled-preview.xml</TemplateURL>
-  <Icon>https://raw.githubusercontent.com/adman234/wled-preview/main/unraid/icon.svg</Icon>
+  <Icon>https://raw.githubusercontent.com/adman234/wled-preview/main/unraid/icon.png</Icon>
   <ExtraParams>--restart=unless-stopped</ExtraParams>
   <PostArgs/>
   <CPUset/>
