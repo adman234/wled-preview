@@ -31,4 +31,4 @@
 - [ ] Multiple devices/profiles stored locally (IndexedDB) so you can compare setups.
 - [ ] Import WLED 0.15+ effect metadata so custom/usermod effects show correct names.
 - [ ] Accessibility: reduced-motion option, colour-blind friendly labels, keyboard navigation.
-- [ ] Auth / reverse-proxy docs; PWA install for offline use.
+- [ ] PWA install for offline use.
