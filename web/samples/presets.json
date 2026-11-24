@@ -7,6 +7,6 @@
 "6":{"n":"Theater Chase","bri":140,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,120],[0,0,0],[0,0,0]],"fx":13,"sx":180,"ix":128,"pal":0}]},
 "7":{"n":"Meteor Shower","bri":180,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[200,220,255],[0,0,0],[0,0,0]],"fx":76,"sx":160,"ix":128,"pal":0,"mi":true}]},
 "8":{"n":"Party Plasma","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,0,0],[0,0,0]],"fx":97,"sx":128,"ix":128,"pal":6}]},
-"9":{"n":"Unsupported Effect","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,255,0],[0,0,255]],"fx":79,"sx":128,"ix":128,"pal":11}]},
+"9":{"n":"Unsupported Effect","bri":128,"on":true,"seg":[{"id":0,"start":0,"stop":150,"col":[[255,0,0],[0,255,0],[0,0,255]],"fx":38,"sx":128,"ix":128,"pal":11}]},
 "10":{"n":"Holiday Playlist","playlist":{"ps":[1,2,3],"dur":[100,100,100],"transition":[7],"repeat":0,"end":0}}
 }

@@ -16,9 +16,9 @@ const render = (s, t = 1000, bri = 255) => {
   return r.frame(t);
 };
 
-test('solid fills with colour 1 scaled by brightness', () => {
+test('solid fills with colour 1, master brightness is linear light shown as sRGB', () => {
   const out = render(seg({}), 0, 128);
-  assert.ok(Math.abs(out[0] - 128 * 255 / 255) < 1);
+  assert.ok(Math.abs(out[0] - 255 * Math.pow(128 / 255, 1 / 2.2)) < 1);
   assert.equal(out[1], 0);
 });
 
@@ -64,9 +64,9 @@ test('effects animate over time', () => {
 });
 
 test('unknown effects fall back and are flagged approximated', () => {
-  const s = seg({ fx: 79 });
+  const s = seg({ fx: 38 });
   assert.ok(isApproximated(s));
-  assert.equal(effectName(79), 'Ripple');
+  assert.equal(effectName(38), 'Aurora');
   const out = render(s, 500);
   assert.ok(out.some((v) => v > 0));
 });
@@ -110,4 +110,15 @@ test('Noisefire is red/orange and Fill Noise varies with a palette', () => {
 
 test('newly added effects are no longer flagged approximated', () => {
   for (const fx of [37, 54, 69, 80, 81, 86, 110, 143]) assert.ok(!isApproximated(seg({ fx })), `fx ${fx}`);
+});
+
+test('grouping and spacing follow WLED: groups of grp lit pixels, then spc dark ones', () => {
+  const out = render(seg({ grp: 2, spc: 1 }), 0);
+  const lit = Array.from({ length: 9 }, (_, i) => out[i * 3] > 0);
+  assert.deepEqual(lit, [true, true, false, true, true, false, true, true, false]);
+});
+
+test('offset rotates the segment', () => {
+  const a = render(seg({ fx: 46 }), 0), b = render(seg({ fx: 46, of: 5 }), 0);
+  assert.ok(Math.abs(a[0] - b[5 * 3]) < 1e-6);
 });
