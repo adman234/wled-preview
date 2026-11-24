@@ -8,12 +8,16 @@
 
 ## Preview accuracy
 
-- [ ] Implement the remaining 1D effects (Ripple, Twinklefox, Noise*, Lake, Railway, Police, Fairy, Spots, Heartbeat, Drip, Starburst, …).
+- [x] Port effects 0–37, 39–43, 45–47, 50, 52, 54–81, 85–88, 91–95, 97, 99, 110 and 143 from WLED 0.15.5 `FX.cpp`.
+- [ ] Port the remaining 1D effects: 38 Aurora, 44 Tetrix, 48 Rolling Balls, 49 Fairy, 51 Fairytwinkle, 82–84 Halloween Eyes / Solid Pattern / Solid Pattern Tri, 89 Fireworks Starburst, 90 Fireworks 1D, 96 Drip, 98 Percent, and ids 100+ (Heartbeat, Pacifica, Candle Multi, Solid Glitter, Sunrise, Phased, Twinkleup, Noise Pal, Sine, Phased Noise, Chunchun, Dancing Shadows, Washing Machine, Blends, TV Simulator, Dynamic Smooth, audio-reactive effects…).
 - [ ] 2D effects for matrix setups (Game of Life, Plasma Ball, Julia, Matrix, Distortion Waves…) – currently matrices run 1D effects over the pixel index.
-- [ ] Verify timing/curves against the real firmware; ideal end state is compiling WLED's FX code to WebAssembly so previews are exact.
-- [ ] Complete the palette table (remaining built-in palettes, custom `palette*.json` files).
+- [x] Match WLED's frame clock (23 ms ticks, per-segment `next_time`), PRNG, trig and noise.
+- [ ] Ideal end state: compile WLED's FX code to WebAssembly so previews are exact.
+- [x] All built-in palettes (ids 0–70): the 65 fixed ones generated from WLED's `palettes.h`, plus Default, Random and the colour-based ones.
+- [ ] Custom `palette*.json` files.
 - [ ] Segment blend modes, transitions and "ps" (apply preset) chains; `nl` (nightlight) and `bri` fades.
-- [ ] Gamma correction, colour order and RGBW/CCT handling to match how real LEDs look.
+- [x] WLED's colour gamma, then linear brightness shown as sRGB on screen.
+- [ ] Colour order and RGBW/CCT handling.
 - [ ] Audio-reactive (AudioReactive usermod) effects driven by uploaded audio or microphone.
 
 ## Other ideas and enhancements

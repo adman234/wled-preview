@@ -51,6 +51,12 @@ function normaliseSeg(raw, total) {
     sx: raw.sx !== undefined ? raw.sx | 0 : 128,
     ix: raw.ix !== undefined ? raw.ix | 0 : 128,
     pal: raw.pal | 0,
+    c1: raw.c1 !== undefined ? raw.c1 & 255 : 128,
+    c2: raw.c2 !== undefined ? raw.c2 & 255 : 128,
+    c3: raw.c3 !== undefined ? raw.c3 & 31 : 16,
+    o1: !!raw.o1,
+    o2: !!raw.o2,
+    o3: !!raw.o3,
     rev: !!raw.rev,
     mi: !!raw.mi,
   };
